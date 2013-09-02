@@ -3,10 +3,6 @@
 // and updates its bid accordingly.
 // Poor performing "Enabled" keywords will be paused.
 
-// Used for logging the messages to a spreadsheet
-var SPREADSHEET_LOG_URL= 'https://docs.google.com/a/growth.gr/spreadsheet/ccc?key=0AlID7817xZmxdGEzdEdVd0FkU1VwX1QtVXNhYmswcFE#gid=0';
-var SCRIPT_NAME ='Keyword Bidding Optimization';
-var ACCOUNT='Gianna Kazakou';
 // The campaigns to which the algorithm is applied to.
 var campaigns={
   'Search.Brand': true  // true is just a pseudovalue
@@ -76,7 +72,7 @@ function checkCPALower(keyword,cpa){
     changeBid(keyword,-0.2);
   }
   else{
-     changeBid(keyword,-0.25);
+    changeBid(keyword,-0.25);
   }
 }
 
@@ -103,10 +99,7 @@ function checkCost(keyword,cost){
     changeBid(keyword,-0.3);
   }
   else{
-    var msg='Pausing keyword:'+keyword.getText();
-    Logger.log(msg);
-    log(msg);
-    keyword.pause();
+     pause(keyword);
   }
 }
 // Change default keyword bid by "cpc" units.
@@ -114,16 +107,11 @@ function changeBid(keyword,cpc){
   var keywordCpc = keyword.getMaxCpc();
   keywordCpc = keywordCpc + keywordCpc * cpc;
   keywordCpc = Number(keywordCpc.toFixed(4));
-  var msg='Changing keyword cpc: '+keyword.getText()+' from:'+keyword.getMaxCpc()+' to:'+keywordCpc;
-  Logger.log(msg);
-  log(msg);
   keyword.setMaxCpc(keywordCpc);
+  Logger.log('Changing keyword: '+keyword.getId()+' '+keyword.getText()+' from:'+keyword.getMaxCpc()+' to:'+keywordCpc);
 }
-// Log the messages to a spreadsheet
-function log(msg){
-  var spreadsheet=SpreadsheetApp.openByUrl(SPREADSHEET_LOG_URL);
-  var sheet=spreadsheet.getActiveSheet();
-  var range = sheet.getRange(sheet.getLastRow()+1,1,1,4);
-  var formattedDate = Utilities.formatDate(new Date(), "GMT+3", "yyyy-MM-dd");
-  range.setValues([[formattedDate,ACCOUNT,SCRIPT_NAME,msg]]);
+
+function pause(keyword){
+  keyword.pause();
+  Logger.log('Pausing keyword: '+keyword.getId()+' '+keyword.getText());
 }

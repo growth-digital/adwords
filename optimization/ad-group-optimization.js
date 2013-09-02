@@ -3,11 +3,6 @@
 // and updates its bid accordingly.
 // Poor performing "Enabled" ad groups will be paused.
 
-// Used for logging the messages to a spreadsheet
-var SPREADSHEET_LOG_URL= 'some_spreadsheet_url';
-var SCRIPT_NAME ='Name of the Script';
-var ACCOUNT='Name of the account';
-
 // The campaigns to which the algorithm is applied to.
 var campaigns={
   'GDN.Remarketing': true  // true is just a pseudovalue
@@ -107,10 +102,7 @@ function checkCost(adGroup,cost){
     changeBid(adGroup,-0.3);
   }
   else{
-    var msg='Pausing adGroup: '+adGroup.getName();
-    Logger.log(msg);
-    log(msg);
-    adGroup.pause();
+    pause(adGroup);
   }
 }
 
@@ -119,17 +111,12 @@ function changeBid(adGroup,cpc){
   var adGroupCpc = adGroup.getKeywordMaxCpc();
   adGroupCpc = adGroupCpc + adGroupCpc * cpc;
   adGroupCpc = Number(adGroupCpc.toFixed(4));   // set precision
-  var msg='Changing adGroup cpc: '+adGroup.getName()+' from:'+adGroup.getKeywordMaxCpc()+' to:'+adGroupCpc;
-  Logger.log(msg);
-  log(msg);
   adGroup.setKeywordMaxCpc(adGroupCpc);
+  Logger.log('Changing adGroup: '+adGroup.getId()+' '+adGroup.getName()+' from:'+adGroup.getKeywordMaxCpc()+' to:'+adGroupCpc);
 }
 
-// Log the messages to a spreadsheet
-function log(msg){
-  var spreadsheet=SpreadsheetApp.openByUrl(SPREADSHEET_LOG_URL);
-  var sheet=spreadsheet.getActiveSheet();
-  var range = sheet.getRange(sheet.getLastRow()+1,1,1,4);
-  var formattedDate = Utilities.formatDate(new Date(), "GMT+3", "yyyy-MM-dd");
-  range.setValues([[formattedDate,ACCOUNT,SCRIPT_NAME,msg]]);
+
+function pause(adGroup){
+  adGroup.pause();
+  Logger.log('Pausing adGroup:'+adGroup.getName());
 }
