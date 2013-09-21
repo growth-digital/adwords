@@ -31,7 +31,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 // Each change needs to be in a different row.
 
 // The spreadsheet in which the log messages of the modified keywords are stored.
-var SPREADSHEET_REVERT_KEYWORDS_URL= 'https://docs.google.com/a/growth.gr/spreadsheet/ccc?key=0AlID7817xZmxdEtTS25oWVJsTi1sTHd1bEJ3Rmctb0E#gid=0';
+var SPREADSHEET_REVERT_KEYWORDS_URL= '';
 
 var campaigns={
   'CAMPAIGN_NAME': true
